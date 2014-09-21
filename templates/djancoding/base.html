@@ -1,0 +1,114 @@
+{% load staticfiles %}
+
+<!DOCTYPE HTML>
+<html><head>
+	<title>Kódolások {% block title %} {%endblock%}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="SHORTCUT ICON"
+  href="http://django.arek.uni-obuda.hu/media/icons/elft4.ico"> 
+  <style type="text/css">
+p.title {
+  font-size: 15pt;
+  text-align: justify;
+}
+h1, h2, h3 {
+  color: #007070;
+}
+div.main_navigation {
+  text-align: center;
+  padding: 10px 30px;
+  background-color: #ffffdd;
+  margin: 20px 10px;
+}
+div.navigation {
+  text-align: center;
+  padding: 10px 30px;
+  background-color: #ffffdd;
+  margin: 20px 80px;
+}
+div.item {
+  border: 1px outset #b3b3b3;
+  padding: 10px 15px;
+  background-color: #f6f6f6;
+  margin: 30px 10px;
+}
+p {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+p.title, p.date, p.lecturer, p.link, p.place {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+a {
+  text-decoration: none;
+  font-weight: 700;
+}
+h1, h2 {
+  text-align: center;
+}
+div.logo {
+  text-align: center;
+  margin: 10px 5px;
+}
+div.main {
+  background: white;
+  border: 1px outset #a085f9;
+  padding: 18px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 800px;
+}
+img.event {
+  max-width: 100%;
+}
+hr {
+  color: #a085f9;
+  width: 80%
+}
+body {
+  background-color:
+  skyblue;
+}
+table {
+    border-collapse: collapse;
+}
+table, td, th {
+    padding: 20px;
+    border: 1px solid black;
+}
+
+  </style>
+</head><body>
+<div class="main">
+    <div class="main_navigation">
+      <a href="http://django.arek.uni-obuda.hu/django/elft/naptar/">Eseménynaptár főoldala</a> –
+      <a href="http://www.kfki.hu/~elftfeje/rendezvenyek">Rendezvények
+          régi archívuma</a> –
+      <a href="http://www.kfki.hu/~elftfeje/">A Megyei Csoport főoldala</a> –
+      <a
+      href="http://django.arek.uni-obuda.hu/django/admin">Adminisztráció</a>
+    </div>
+
+      <div class="logo"><img style="width: 600px; height: 50px;"
+          src="{% static "binary_free_part.jpg" %}"
+      alt="Bitek ikon"></div>
+
+      <h1>Kódolók oldala</h1>
+      <h2>{% block cim%}{% endblock%}</h2>
+
+{% block torzs %}
+{% endblock torzs %}
+
+{% block eszrevetel %}
+<hr>
+      <p style="margin-top: 4px; text-align: left;">Az oldallal kapcsolatos
+      észrevételeit írja meg <a
+          href="http://www.amk.uni-obuda.hu/~horvatha/elerhetoseg.html">Horváth
+Árpádnak</a>
+</p>
+{% endblock eszrevetel %}
+</div>
+
+</body></html>
+
