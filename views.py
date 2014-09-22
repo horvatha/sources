@@ -2,6 +2,7 @@ from django.shortcuts import render
 import coding
 import collections
 
+kenobi_symbols = "DAUIYLVO_E"
 sources = {
     1: (
         "Egyforma valószínűségű jelekből álló forrás",
@@ -20,10 +21,12 @@ sources = {
     3: (
         "A Kenobis példában szereplő forrás",
         coding.Source([.01, .01, .03, .04, .05, .06, .09, .13, .25, .33],
-                      symbols="DAUIYLVO-E"),
+                      symbols=kenobi_symbols),
         [
-            coding.Code("000101 000100 00011 0000 0100 0101 001 011 10 11"),
-            coding.Code("0000 0001 0010 0011 0100 0101 0110 0111 1000 1001"),
+            coding.Code("000101 000100 00011 0000 0100 0101 001 011 10 11",
+                        symbols=kenobi_symbols),
+            coding.Code("0000 0001 0010 0011 0100 0101 0110 0111 1000 1001",
+                        symbols=kenobi_symbols),
         ]
     ),
 }
