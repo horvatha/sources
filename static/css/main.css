@@ -2,8 +2,12 @@ p.title {
   font-size: 15pt;
   text-align: justify;
 }
-h1, h2, h3 {
+h2, h3 {
   color: #007070;
+}
+h1 {
+  color: white;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 div.main_navigation {
   text-align: center;
@@ -35,12 +39,18 @@ a {
   text-decoration: none;
   font-weight: 700;
 }
-h1, h2 {
+h2 {
   text-align: center;
 }
 div.logo {
   text-align: center;
-  margin: 10px 5px;
+  position: relative;
+}
+div.logo div.header1 {
+    position: absolute;
+    top: -15px;
+    left: 100px;
+    width: 800px;
 }
 div.main {
   background: white;

@@ -14,11 +14,15 @@
         <a href="{% url "source_home" %}">Forrás választása</a> – {% block urls %}{% endblock %}
     </div>
 
-      <div class="logo"><img style="width: 600px; height: 50px;"
-          src="{% static "binary_free_part.jpg" %}"
-      alt="Bitek ikon"></div>
+    <div class="logo">
+        <img id="logo" style="width: 600px; height: 50px;"
+            src="{% static "binary_free_part.jpg" %}"
+            alt="Bitek ikon">
+        <div class="header1">
+            <h1>Kódolók oldala</h1>
+        </div>
+    </div>
 
-      <h1>Kódolók oldala</h1>
       <h2>{% block header %}{% endblock %}</h2>
 
 {% block content %}
