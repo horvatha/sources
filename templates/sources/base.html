@@ -74,20 +74,21 @@ table {
     border-collapse: collapse;
 }
 table, td, th {
-    padding: 20px;
+    padding: 10px;
     border: 1px solid black;
+}
+.code {
+    background-color: pink;
+}
+.prob {
+    background-color: yellow;
 }
 
   </style>
 </head><body>
 <div class="main">
     <div class="main_navigation">
-      <a href="http://django.arek.uni-obuda.hu/django/elft/naptar/">Eseménynaptár főoldala</a> –
-      <a href="http://www.kfki.hu/~elftfeje/rendezvenyek">Rendezvények
-          régi archívuma</a> –
-      <a href="http://www.kfki.hu/~elftfeje/">A Megyei Csoport főoldala</a> –
-      <a
-      href="http://django.arek.uni-obuda.hu/django/admin">Adminisztráció</a>
+        <a href="{% url "source_home" %}">Forrás választása</a> – {% block urls %}{% endblock %}
     </div>
 
       <div class="logo"><img style="width: 600px; height: 50px;"
@@ -95,19 +96,19 @@ table, td, th {
       alt="Bitek ikon"></div>
 
       <h1>Kódolók oldala</h1>
-      <h2>{% block cim%}{% endblock%}</h2>
+      <h2>{% block header %}{% endblock %}</h2>
 
-{% block torzs %}
-{% endblock torzs %}
+{% block content %}
+{% endblock content %}
 
-{% block eszrevetel %}
+{% block feedback %}
 <hr>
       <p style="margin-top: 4px; text-align: left;">Az oldallal kapcsolatos
       észrevételeit írja meg <a
           href="http://www.amk.uni-obuda.hu/~horvatha/elerhetoseg.html">Horváth
 Árpádnak</a>
 </p>
-{% endblock eszrevetel %}
+{% endblock feedback %}
 </div>
 
 </body></html>

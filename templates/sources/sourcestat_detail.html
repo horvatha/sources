@@ -1,47 +1,71 @@
 {% extends "sources/base.html" %}
+{% load l10n %}
 
 {% block title %} &ndash; Egy forrás elemzése {% endblock title %}
 
-{% block cim %} Egyforma valószínűségű jelekből álló forrás elemzése {% endblock cim %}
+{% block header %} {{source_name}} elemzése {% endblock header %}
 
-{% block torzs %}
-
-<h2>A forrás adatai</h2>
+{% block content %}
 
 <table class="info">
 <tr>
     <th>Szimbólum</th>
     {% for symbol, info in source.symbols %}
-    <td>{{symbol}}</td>
-    {% endfor %}
+    <td>{{symbol}}</td>{% endfor %}
 </tr>
-<tr>
+<tr class="prob">
     <th>Valószínűség</th>
     {% for prob in source.distribution %}
-    <td>{{prob|floatformat:-3}}</td>
-    {% endfor %}
+    <td>{{prob|floatformat:-3}}</td>{% endfor %}
 </tr>
-<tr>
+<tr class="prob">
     <th>Információtartalom</th>
     {% for symbol, info in source.information %}
-    <td>{{info|floatformat:-3}} bit</td>
-    {% endfor %}
+    <td>{{info|floatformat:-3}} bit</td>{% endfor %}
 </tr>
+{% if code %}
+<tr class="code">
+    <th>Kód</th>
+    {% for c in code.code %}
+    <td>{{c}}</td>{% endfor %}
+</tr>
+{% endif %}
 </table>
 
-<p>
+<p class="prob">
 A következő szimbólum várható információtartalma,
 azaz a forrás entrópiája:<br>
 {{source.entropy|floatformat:-3}} bit szimbólumonként.
 </p>
 
-<h2>A kódolás adatai</h2>
-
 {% if code %}
-A kód statisztikája
+
+<h2>A kódolt üzenetek statisztikai vizsgálata</h2>
+
+<p class="code">
+A szerveren generáltunk <span style="font-weight:bold;">{{code_stat_values.number_of_samples}} darab mintát
+    {{code_stat_values.message_length}} hosszúságú üzenetekből</span> a fenti
+valószínűségekkel jellemezhető forrásból, és kódoltuk az üzeneteket a
+kiválasztott kód szerint. A kódok teljes hosszainak illetve az egy szimbólumra
+eső hosszainak a statisztikája az alábbi táblázatban látható.
+</p>
+
+{% localize on %}
+<table>
+<tr class="code"><td>&nbsp;</td> <th>teljes üzenet</th><th>átlagosan szimbólumonként</th></tr>
+<tr class="code"><th>átlagos kódhossz</th> <td>{{code_stat_values.0|floatformat:-3}}</td><td>{{code_stat_values.3|floatformat:-3}}</td></tr>
+<tr class="code"><th>maximális kódhossz</th> <td>{{code_stat_values.1}}</td><td>{{code_stat_values.4|floatformat:-3}}</td></tr>
+<tr class="code"><th>minimális kódhossz</th> <td>{{code_stat_values.2}}</td><td>{{code_stat_values.5|floatformat:-3}}</td></tr>
+</table>
+{% endlocalize %}
+
 {% else %}
-<button id="id_default" type="submit" formaction="sources/1/default/">A honlap létrehozója által megadott kódolás vizsgálata.</button>
+<h2>Válassz egy kódolást az alábbiak közül!</h2>
+
+<ul>
+{% for code in code_list %}<li><a id="id_default" href="{% url "source_detail" id %}{{forloop.counter}}/">{{code}}</a></li>{% endfor %}
+</ul>
 {% endif %}
 
-{% endblock torzs %}
+{% endblock content %}
 

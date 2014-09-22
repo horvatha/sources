@@ -2,22 +2,21 @@
 
 {% block title %} &ndash; Források elemzése {% endblock title %}
 
-{% block cim %} A forrás elemzése {% endblock cim %}
+{% block header %} A forrás elemzése {% endblock header %}
 
-{% block torzs %}
+{% block content %}
 <p>Üdvözöllek az oldalon!</p>
 
 <p>Az alábbi forrásokat vizsgálhatod meg itt:</p>
 
 <ul>
+    {% for id, values in sources.items %}
     <li>
-        <a href="1/" id="id_item1">Egyforma valószínűségű jelekből álló forrás</a>
+    <a href="{{id}}/" id="id_item{{id}}">{{values.0}}</a>
     </li>
-    <li>
-        <a href="2/" id="id_item2">Eltérő valószínűségű jelekből álló forrás</a>
-    </li>
+    {%  endfor %}
 </ul>
 
-{% endblock torzs %}
+{% endblock content %}
 
 
