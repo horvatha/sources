@@ -1,4 +1,4 @@
-{% extends "sources/base.html" %}
+{% extends "base.html" %}
 {% load l10n %}
 
 {% block title %} &ndash; Egy forrás elemzése {% endblock title %}
@@ -7,67 +7,86 @@
 
 {% block header %} {{source_name}} elemzése {% endblock header %}
 
+{% block jumbotron %}
+{% endblock jumbotron %}
+
 {% block content %}
+<div class="row">
+   <div class="col-md-8">
+     <table class="table">
+           <tr>
+               <th>Szimbólum</th>
+               {% for symbol, info in source.symbols %}
+               <td>{{symbol}}</td>{% endfor %}
+           </tr>
+           <tr class="prob">
+               <th>Valószínűség</th>
+               {% for prob in source.distribution %}
+               <td>{{prob|floatformat:-3}}</td>{% endfor %}
+           </tr>
+           <tr class="prob">
+               <th>Információtartalom</th>
+               {% for symbol, info in source.information %}
+               <td>{{info|floatformat:-3}} bit</td>{% endfor %}
+           </tr>
+           {% if code %}
+           <tr class="code">
+               <th>Kód</th>
+               {% for c in code.code %}
+               <td>{{c}}</td>{% endfor %}
+           </tr>
+           {% endif %}
+       </table>
+   </div>
+   <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Entrópia</h3>
+            </div>
+            <div class="panel-body prob">
+              A következő szimbólum várható információtartalma,
+              azaz a forrás entrópiája:<br>
+              {{source.entropy|floatformat:-3}} bit szimbólumonként.
+            </div>
+          </div>
+   </div>
+</div>
 
-<table class="info">
-<tr>
-    <th>Szimbólum</th>
-    {% for symbol, info in source.symbols %}
-    <td>{{symbol}}</td>{% endfor %}
-</tr>
-<tr class="prob">
-    <th>Valószínűség</th>
-    {% for prob in source.distribution %}
-    <td>{{prob|floatformat:-3}}</td>{% endfor %}
-</tr>
-<tr class="prob">
-    <th>Információtartalom</th>
-    {% for symbol, info in source.information %}
-    <td>{{info|floatformat:-3}} bit</td>{% endfor %}
-</tr>
 {% if code %}
-<tr class="code">
-    <th>Kód</th>
-    {% for c in code.code %}
-    <td>{{c}}</td>{% endfor %}
-</tr>
-{% endif %}
-</table>
 
-<p class="prob">
-A következő szimbólum várható információtartalma,
-azaz a forrás entrópiája:<br>
-{{source.entropy|floatformat:-3}} bit szimbólumonként.
-</p>
+<div class="row">
+   <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">A kódolt üzenetek statisztikai vizsgálata</h3>
+        </div>
 
-{% if code %}
 
-<h2>A kódolt üzenetek statisztikai vizsgálata</h2>
+        <div class="panel-body code">
+        A szerveren generáltunk <span style="font-weight:bold;">{{code_stat_values.number_of_samples}} darab mintát
+            {{code_stat_values.message_length}} hosszúságú üzenetekből</span> a fenti
+        valószínűségekkel jellemezhető forrásból, és kódoltuk az üzeneteket a
+        kiválasztott kód szerint. A kódok teljes hosszainak illetve az egy szimbólumra
+        eső hosszainak a statisztikája a következő táblázatban látható.
+        </div>
+      </div>
+   </div>
 
-<p class="code">
-A szerveren generáltunk <span style="font-weight:bold;">{{code_stat_values.number_of_samples}} darab mintát
-    {{code_stat_values.message_length}} hosszúságú üzenetekből</span> a fenti
-valószínűségekkel jellemezhető forrásból, és kódoltuk az üzeneteket a
-kiválasztott kód szerint. A kódok teljes hosszainak illetve az egy szimbólumra
-eső hosszainak a statisztikája az alábbi táblázatban látható.
-</p>
-
-{% localize on %}
-<table>
-<tr class="code"><td>&nbsp;</td> <th>teljes üzenet</th><th>átlagosan szimbólumonként</th></tr>
-<tr class="code"><th>átlagos kódhossz</th> <td>{{code_stat_values.0|floatformat:-3}}</td><td>{{code_stat_values.3|floatformat:-3}}</td></tr>
-<tr class="code"><th>maximális kódhossz</th> <td>{{code_stat_values.1}}</td><td>{{code_stat_values.4|floatformat:-3}}</td></tr>
-<tr class="code"><th>minimális kódhossz</th> <td>{{code_stat_values.2}}</td><td>{{code_stat_values.5|floatformat:-3}}</td></tr>
-</table>
-{% endlocalize %}
+   <div class="col-md-6">
+     <table class="table">
+     <tr class="code"><td>&nbsp;</td> <th>teljes üzenet</th><th>átlagosan szimbólumonként</th></tr>
+     <tr class="code"><th>átlagos kódhossz</th> <td>{{code_stat_values.0|floatformat:-3}}</td><td>{{code_stat_values.3|floatformat:-3}}</td></tr>
+     <tr class="code"><th>maximális kódhossz</th> <td>{{code_stat_values.1}}</td><td>{{code_stat_values.4|floatformat:-3}}</td></tr>
+     <tr class="code"><th>minimális kódhossz</th> <td>{{code_stat_values.2}}</td><td>{{code_stat_values.5|floatformat:-3}}</td></tr>
+     </table>
+   </div>
 
 {% else %}
-<h2>Válassz egy kódolást az alábbiak közül!</h2>
+  <div class="page-header">
+    <h2>Válassz egy kódolást az alábbiak közül!</h2>
+  </div>
 
-<ul>
-{% for code in code_list %}<li><a id="id_default" href="{% url "source_detail" id %}{{forloop.counter}}/">{{code}}</a></li>{% endfor %}
-</ul>
+  {% for code in code_list %}<p><a class="btn btn-primary btn-lg" role="button" id="id_link{{forloop.counter}}" href="{% url "source_detail" id %}{{forloop.counter}}/">{{code}} &raquo;</a></p>{% endfor %}
 {% endif %}
 
 {% endblock content %}
-

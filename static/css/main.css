@@ -5,15 +5,6 @@ p.title {
 h2, h3 {
   color: #007070;
 }
-h1 {
-  color: white;
-  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
-}
-div.main_navigation {
-  padding: 10px 30px;
-  background-color: #ffffdd;
-  margin: 20px 10px;
-}
 div.navigation {
   text-align: center;
   padding: 10px 30px;

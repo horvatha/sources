@@ -1,22 +1,19 @@
-{% extends "sources/base.html" %}
+{% extends "base.html" %}
 
-{% block title %} &ndash; Források elemzése {% endblock title %}
+{% block title %} &ndash; Források elemzése{% endblock title %}
 
-{% block header %} A forrás elemzése {% endblock header %}
+{% block header %}Források elemzése{% endblock header %}
 
-{% block content %}
+{% block jumbotron %}
 <p>Üdvözöllek az oldalon!</p>
 
 <p>Az alábbi forrásokat vizsgálhatod meg itt:</p>
 
-<ul>
-    {% for id, values in sources.items %}
-    <li>
-    <a href="{{id}}/" id="id_item{{id}}">{{values.0}}</a>
-    </li>
-    {%  endfor %}
-</ul>
+{% for id, values in sources.items %}
+<p><a href="{{id}}/" id="id_item{{id}}" class="btn btn-primary btn-lg" role="button">{{values.0}} &raquo;</a>
+</p>
+{%  endfor %}
+{% endblock jumbotron %}
 
+{% block content %}
 {% endblock content %}
-
-
