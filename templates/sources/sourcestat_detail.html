@@ -3,6 +3,8 @@
 
 {% block title %} &ndash; Egy forrás elemzése {% endblock title %}
 
+{% block urls %}{% if code %} / <a href="{% url "source_detail" id %}">Kód választása</a> {% endif %} {% endblock %}
+
 {% block header %} {{source_name}} elemzése {% endblock header %}
 
 {% block content %}

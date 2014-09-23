@@ -1,6 +1,4 @@
-{% load staticfiles %}
-
-<!DOCTYPE HTML>
+{% load staticfiles %}<!DOCTYPE HTML>
 <html>
 <head>
   <title>Kódolások {% block title %} {%endblock%}</title>
@@ -10,10 +8,6 @@
 </head>
 <body>
 <div class="main">
-    <div class="main_navigation">
-        <a href="{% url "source_home" %}">Forrás választása</a> – {% block urls %}{% endblock %}
-    </div>
-
     <div class="logo">
         <img id="logo" style="width: 600px; height: 50px;"
             src="{% static "binary_free_part.jpg" %}"
@@ -21,6 +15,10 @@
         <div class="header1">
             <h1>Kódolók oldala</h1>
         </div>
+    </div>
+
+    <div class="main_navigation">
+        <a href="{% url "source_home" %}">Forrás választása</a> {% block urls %}{% endblock %}
     </div>
 
       <h2>{% block header %}{% endblock %}</h2>
