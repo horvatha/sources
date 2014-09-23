@@ -10,7 +10,6 @@ h1 {
   text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 div.main_navigation {
-  text-align: center;
   padding: 10px 30px;
   background-color: #ffffdd;
   margin: 20px 10px;
