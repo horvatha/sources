@@ -2,8 +2,8 @@ from django.core.urlresolvers import resolve
 from django.template.loader import render_to_string
 from django.http import HttpRequest
 from django.test import TestCase
-from sources.views import home, source_detail, code_stat, sources
-from coding import Source, Code
+from sources.views import home, source_detail, code_stat, sources, chain
+from coding import Source, Code, Channel
 
 source = Source([.25]*4)
 code = Code("00 01 10 11")
@@ -36,6 +36,34 @@ class SourceDetailPageTest(TestCase):
                 "source": source,
                 "code_list": code_list,
                 "id": 1
+            }
+        )
+        self.assertEqual(response.content.decode(), expected_html)
+
+
+class ChainPageTest(TestCase):
+    def test_chain_url_resolves_chain_view(self):
+        for url in ("/sources/chain/3/1/0/",
+                    "/sources/chain/3/1/[6]/",
+                    "/sources/chain/3/1/[3,6]/",
+                    "/sources/chain/3/1/0.1/"):
+            found = resolve(url)
+            self.assertEqual(found.func, chain)
+
+    def test_source_detail_returns_correct_html(self):
+        args = source_number, code_number, channel = 3, 1, 0
+        response = chain(HttpRequest(), *args)
+        source_name, source, code_list = sources[source_number]
+        code = code_list[code_number]
+        expected_html = render_to_string(
+            'sources/chain.html',
+            {
+                "source_name": source_name,
+                "source": source,
+                "code": code,
+                "source_number": source_number,
+                "code_number": code_number,
+                "channel": Channel(channel),
             }
         )
         self.assertEqual(response.content.decode(), expected_html)

@@ -7,4 +7,7 @@ urlpatterns = patterns(
         name='source_detail'),
     url(r'^(\d+)/(\d+)/$', 'sources.views.sourcestat_default',
         name='sourcestat_default'),
+    url(r'^chain/(?P<source_number>\d+)/(?P<code_number>\d+)/(?P<chain>[\[\],.0-9]+)/$',
+        'sources.views.chain',
+        name='sourcestat_default'),
 )
