@@ -16,7 +16,7 @@ class SourceHomePageTest(TestCase):
 
     def test_home_page_returns_correct_html(self):
         response = home(HttpRequest())
-        expected_html = render_to_string('sources/sourcestat.html',
+        expected_html = render_to_string('sources/source.html',
                                          {"sources": sources})
         self.assertEqual(response.content.decode(), expected_html)
 

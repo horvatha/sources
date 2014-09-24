@@ -33,7 +33,7 @@ sources = {
 
 
 def home(request):
-    return render(request, "sources/sourcestat.html", {"sources": sources})
+    return render(request, "sources/source.html", {"sources": sources})
 
 
 def source_detail(request, id):
