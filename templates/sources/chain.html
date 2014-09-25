@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %} &ndash; Információs lánc{% endblock title %}
+
+{% block header %}Információs lánc{% endblock header %}
+
+{% block jumbotron %}
+<p>
+Ezen az oldalon a teljes információs láncot láthatod, amelyben a forrástól
+kiindul az üzenet, majd kódolás után átmegy egy csatornán, majd a vevő megkapja
+a dekódolt szöveget, amely hibás is lehet, ha a csatorna hibásan adta tovább az
+üzenetet.
+</p>
+{% endblock jumbotron %}
+
+{% block content %}
+{{channel.verbose_description}}
+{% endblock content %}
+
