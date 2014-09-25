@@ -85,9 +85,12 @@ def sourcestat_default(request, id, code_number):
     )
 
 
-def chain(request, source_number, code_number, channel):
+def simple_chain(request, source_number, code_number, channel):
     source_name, source, codes = sources[int(source_number)]
     code = codes[int(code_number)-1]
+    chain = coding.Chain(source, code, coding.Channel(channel))
+    chain.run()
+    run = chain.runs[0]
     return render(
         request,
         "sources/chain.html",
@@ -98,5 +101,10 @@ def chain(request, source_number, code_number, channel):
             "source_number": source_number,
             "code_number": code_number,
             "channel": coding.Channel(channel),
+            "run": run,
         }
     )
+
+
+def general_chain(request, source_desc, code_desc, channel_desc):
+    pass

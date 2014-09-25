@@ -8,12 +8,23 @@
 <p>
 Ezen az oldalon a teljes információs láncot láthatod, amelyben a forrástól
 kiindul az üzenet, majd kódolás után átmegy egy csatornán, majd a vevő megkapja
-a dekódolt szöveget, amely hibás is lehet, ha a csatorna hibásan adta tovább az
-üzenetet.
+a dekódolt szöveget, amely hibás is lehet, ha a csatorna hibásan adta tovább a
+bitsorozatot.
+</p>
+
+<p>
+A pillanatnyilag kiválasztott csatorna a {{channel.verbose_description}}.
 </p>
 {% endblock jumbotron %}
 
 {% block content %}
-{{channel.verbose_description}}
+
+<div class="col-md-6">
+  <table class="table">
+  {% for item in run.get_items_linearized %}
+  <tr><td>{{item}}</td></tr>
+  {% endfor %}
+  </table>
+</div>
 {% endblock content %}
 
