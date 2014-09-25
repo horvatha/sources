@@ -67,6 +67,7 @@ class ChainPageTest(TestCase):
             }
         )
         self.assertEqual(response.content.decode(), expected_html)
+        self.assertContains(response, "hibament")
 
 
 class CodeStatTest(TestCase):

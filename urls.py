@@ -10,5 +10,5 @@ urlpatterns = patterns(
     url(r'^chain/(?P<source_number>\d+)/(?P<code_number>\d+)/'
         r'(?P<channel>[\[\],.0-9]+)/$',
         'sources.views.chain',
-        name='sourcestat_default'),
+        name='chain'),
 )

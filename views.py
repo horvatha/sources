@@ -66,9 +66,9 @@ def code_stat(source, code, message_length, number_of_samples):
     return CodeStat(*all_values)
 
 
-def sourcestat_default(request, id, code_id):
+def sourcestat_default(request, id, code_number):
     source_name, source, codes = sources[int(id)]
-    code = codes[int(code_id)-1]
+    code = codes[int(code_number)-1]
     code_stat_values = code_stat(source, code,
                                  message_length=100, number_of_samples=50)
     return render(
@@ -78,6 +78,7 @@ def sourcestat_default(request, id, code_id):
             "source_name": source_name,
             "source": source,
             "code": code,
+            "code_number": code_number,
             "id": id,
             "code_stat_values": code_stat_values,
         }

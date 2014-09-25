@@ -38,7 +38,9 @@
            {% endif %}
        </table>
    </div>
-   <div class="col-md-4">
+   <div class="col-md-1">
+   </div>
+   <div class="col-md-3">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">Entrópia</h3>
@@ -80,6 +82,8 @@
      <tr class="code"><th>minimális kódhossz</th> <td>{{code_stat_values.2}}</td><td>{{code_stat_values.5|floatformat:-3}}</td></tr>
      </table>
    </div>
+
+   <p><a class="btn btn-primary btn-lg" role="button" href="{% url "chain" id code_number 0 %}">Az információs lánc vizsgálata &raquo;</a></p>
 
 {% else %}
   <div class="page-header">
