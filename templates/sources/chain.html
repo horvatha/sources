@@ -14,11 +14,14 @@ bitsorozatot.
 </p>
 
 <p>
-A pillanatnyilag kiválasztott csatorna a {{channel.verbose_description}}.
+A pillanatnyilag kiválasztott csatorna: a {{channel.verbose_description}}.
 </p>
 
 <p>
 <a class="btn btn-primary btn-lg" role="button" href="{% url "general_chain" "fix:I_LOVE_YOU" code "[24]" %}">Fix forrás és hibás csatorna &raquo;</a>
+</p>
+<p>
+<a class="btn btn-primary btn-lg" role="button" href="{% url "general_chain" "fix:I_LOVE_YOU" code "[24]" %}10/">Fix forrás, hibás csatorna és hibajavítás &raquo;</a>
 </p>
 {% endblock jumbotron %}
 
@@ -41,4 +44,3 @@ A pillanatnyilag kiválasztott csatorna a {{channel.verbose_description}}.
 <p>
 </p>
 {% endblock content %}
-

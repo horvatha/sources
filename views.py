@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import coding
 import collections
+from sources import tools
 
 kenobi_symbols = "DAUIYLVO_E"
 sources = {
@@ -88,23 +89,41 @@ def sourcestat_default(request, id, code_number):
 def simple_chain(request, source_number, code_number, channel):
     source_name, source, codes = sources[int(source_number)]
     code = codes[int(code_number)-1]
-    chain = coding.Chain(source, code, coding.Channel(channel))
+    channel = coding.Channel(channel)
+    chain = coding.Chain(source, code, channel)
     chain.run()
     run = chain.runs[0]
     return render(
         request,
         "sources/chain.html",
         {
-            "source_name": source_name,
             "source": source,
             "code": code,
-            "source_number": source_number,
-            "code_number": code_number,
-            "channel": coding.Channel(channel),
+            "channel": channel,
             "run": run,
         }
     )
 
 
-def general_chain(request, source_desc, code_desc, channel_desc):
-    pass
+def general_chain(request, source_description,
+                  code_description, channel_description, hamming_block_length):
+    source = tools.get_source(source_description)
+    code = tools.get_code(code_description)
+    assert set(code.symbols) >= set(source.symbols)
+    channel = tools.get_channel(channel_description)
+    elements = [source, code, channel]
+    if hamming_block_length:
+        elements.insert(-1, coding.Hamming(int(hamming_block_length[:-1])))
+    chain = coding.Chain(*elements)
+    chain.run()
+    run = chain.runs[0]
+    return render(
+        request,
+        "sources/chain.html",
+        {
+            "source": source,
+            "code": code,
+            "channel": channel,
+            "run": run,
+        }
+    )

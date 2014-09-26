@@ -4,7 +4,8 @@ from django.http import HttpRequest
 from django.test import TestCase
 from sources.views import (home, source_detail, code_stat, sources,
                            simple_chain, general_chain)
-from coding import Source, Code, Channel, Chain
+from coding import FixSource, Source, Code, Channel, Chain
+from sources import tools
 
 source = Source([.25]*4)
 code = Code("00 01 10 11")
@@ -46,6 +47,7 @@ url_start = '/sources/fix:I_LOVE_YOU/'
 code_desc = \
     'I:0000,A:000100,D:000101,U:00011,V:001,Y:0100,L:0101,O:011,_:10,E:11'
 
+
 class ChainPageTest(TestCase):
     url_dict = {
         simple_chain: (
@@ -66,10 +68,10 @@ class ChainPageTest(TestCase):
     }
 
     bad_urls = (
-        url_start + code_desc + "/0/5/",
+        url_start + code_desc + "/0/x5/",
     )
 
-    def test_chain_url_resolves_chain_view(self):
+    def test_simple_chain_url_resolves_chain_view(self):
         for func, urls in self.url_dict.items():
             for url in urls:
                 found = resolve(url)
@@ -80,7 +82,7 @@ class ChainPageTest(TestCase):
             with self.assertRaises(Resolver404):
                 resolve(url)
 
-    def test_source_detail_returns_correct_html(self):
+    def test_simple_chain_returns_correct_html(self):
         args = source_number, code_number, channel = 3, 1, 0
         response = simple_chain(HttpRequest(), *args)
         source_name, source, code_list = sources[source_number]
@@ -116,3 +118,43 @@ class CodeStatTest(TestCase):
         )
         for args, result in known_values:
             self.assertEqual(code_stat(*args), result)
+
+
+class ToolsTest(TestCase):
+    def test_get_distribution_and_symbols(self):
+        known_values = {
+            "X:.2 B:.8": ([.2, .8], "XB"),
+        }
+        for source_description, values in known_values.items():
+            expected_distribution, expected_symbols = values
+            distribution, symbols = tools.get_distribution_and_symbols(
+                source_description)
+            self.assertEqual(distribution, expected_distribution)
+            self.assertEqual(symbols, expected_symbols)
+
+    def test_get_source(self):
+        known_values = {
+            "fix:ALABAMA": FixSource("ALABAMA"),
+        }
+        for source_description, expected_source in known_values.items():
+            source = tools.get_source(source_description)
+            self.assertEqual(repr(source), repr(expected_source))
+
+    def test_get_code(self):
+        known_values = {
+            "X:00 Y:01 Z:10": Code("00 01 10", symbols="XYZ"),
+            "X:00,Y:01,Z:10": Code("00 01 10", symbols="XYZ"),
+            "X:00, Y:01, Z:10": Code("00 01 10", symbols="XYZ"),
+        }
+        for code_description, expected_code in known_values.items():
+            code = tools.get_code(code_description)
+            self.assertEqual(repr(code), repr(expected_code))
+
+    def test_normalize(self):
+        known_values = {
+            "[21]": [21],
+            "0.5": "0.5",
+            0.5: 0.5,
+        }
+        for channel_description, expected in known_values.items():
+            self.assertEqual(tools.normalize(channel_description), expected)

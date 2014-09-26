@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, url
 
 general_chain_pattern = "/".join([
-    r'^fix:([^/]+)',
+    r'^([^/]+)',
     r'([^/]+)',
-    r'([-.0-9\[\],]+)/$',
+    r'([-.0-9\[\],]+)',
+    r'(\d+/)?$',
 ]
 )
 
