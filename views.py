@@ -100,7 +100,8 @@ def simple_chain(request, source_number, code_number, channel):
             "source": source,
             "code": code,
             "channel": channel,
-            "run": run,
+            "linearized_outputs":
+            tools.colorize_and_linearize_outputs(run.outputs)
         }
     )
 
@@ -124,6 +125,7 @@ def general_chain(request, source_description,
             "source": source,
             "code": code,
             "channel": channel,
-            "run": run,
+            "linearized_outputs":
+            tools.colorize_and_linearize_outputs(run.outputs)
         }
     )

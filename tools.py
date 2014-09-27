@@ -63,5 +63,23 @@ def alternate_match_diff_spans(text_list):
 
 
 def color_diff(text1, text2):
-    splitted_texts = coding.diff.diff(text1, text2)
+    diff_function = coding.diff.diff
+    if isinstance(text1, coding.Bits):
+        diff_function = coding.diff.bitdiff
+    if isinstance(text1, coding.Message) or isinstance(text1, coding.Bits):
+        text1 = text1.message
+        text2 = text2.message
+    splitted_texts = diff_function(text1, text2)
     return [alternate_match_diff_spans(text) for text in splitted_texts]
+
+
+def colorize_and_linearize_outputs(outputs):
+    items = []
+    for output_pair in reversed(outputs):
+        down_length, up_length = [len(i) for i in output_pair]
+        colored_down, colored_up = color_diff(*output_pair)
+        down = (down_length, colored_down)
+        up = (up_length, colored_up)
+        items.insert(0, down)
+        items.append(up)
+    return tuple(items)

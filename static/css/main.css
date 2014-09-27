@@ -1,3 +1,9 @@
+span.match {
+    color: black;
+}
+span.differ {
+    color: orange;
+}
 p.title {
   font-size: 15pt;
   text-align: justify;

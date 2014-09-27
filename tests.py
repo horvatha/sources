@@ -5,11 +5,26 @@ from django.test import TestCase
 from sources.views import (home, source_detail, code_stat, sources,
                            simple_chain, general_chain)
 from coding import FixSource, Source, Code, Channel, Chain
+import coding
 from sources import tools
 from collections import OrderedDict
 
 source = Source([.25]*4)
 code = Code("00 01 10 11")
+
+fix_source_chain = Chain(
+    FixSource('ALABAMA'),
+    tools.get_code('A:0 B:10 L:110 M:111'),
+    Channel([2])
+)
+fix_source_chain.run()
+fix_source_run = fix_source_chain.runs[0]
+outputs = fix_source_run.outputs
+# print(
+#     outputs,
+#     [tools.color_diff(*[o.message for o in output]) for output in outputs],
+#     sep='\n'
+# )
 
 
 class SourceHomePageTest(TestCase):
@@ -173,21 +188,31 @@ class ToolsTest(TestCase):
                 ('AAABB', 'AAABBB'),
                 (
                     '<span class="match">AAABB</span>',
-                    '<span class="match">AAABB</span><span class="differ">B</span>'
+
+                    '<span class="match">AAABB</span>'
+                    '<span class="differ">B</span>'
                 )
             ),
             (
                 ('AAABBD', 'AAABBB'),
                 (
-                    '<span class="match">AAABB</span><span class="differ">D</span>',
-                    '<span class="match">AAABB</span><span class="differ">B</span>'
+                    '<span class="match">AAABB</span>'
+                    '<span class="differ">D</span>',
+
+                    '<span class="match">AAABB</span>'
+                    '<span class="differ">B</span>'
                 )
             ),
             (
                 ('AABDD', 'AACDD'),
                 (
-                    '<span class="match">AA</span><span class="differ">B</span><span class="match">DD</span>',
-                    '<span class="match">AA</span><span class="differ">C</span><span class="match">DD</span>'
+                    '<span class="match">AA</span>'
+                    '<span class="differ">B</span>'
+                    '<span class="match">DD</span>',
+
+                    '<span class="match">AA</span>'
+                    '<span class="differ">C</span>'
+                    '<span class="match">DD</span>'
                 )
             ),
             (
@@ -204,6 +229,18 @@ class ToolsTest(TestCase):
                         '<span class="differ">C</span>',
                         '<span class="match">DD</span>'
                     ])
+                )
+            ),
+            (
+                (coding.Bits('01011'), coding.Bits('00111')),
+                (
+                    '<span class="match">0</span>'
+                    '<span class="differ">10</span>'
+                    '<span class="match">11</span>',
+
+                    '<span class="match">0</span>'
+                    '<span class="differ">01</span>'
+                    '<span class="match">11</span>'
                 )
             ),
             # (('AAABBB', 'AABBBB'),
@@ -251,3 +288,39 @@ class ToolsTest(TestCase):
         for text, results in known_values.items():
             self.assertEqual(tools.match_span(text), results[0])
             self.assertEqual(tools.differ_span(text), results[1])
+
+    def test_can_colorize_and_linearize_outputs(self):
+        known_values = (
+            (
+                fix_source_run.outputs,
+                (
+                    (
+                        7,
+                        '<span class="match">A</span>'
+                        '<span class="differ">L</span>'
+                        '<span class="match">ABAMA</span>'
+                    ),
+                    (
+                        12,
+                        '<span class="match">0</span>'
+                        '<span class="differ">1</span>'
+                        '<span class="match">1001001110</span>'
+                    ),
+                    (
+                        12,
+                        '<span class="match">0</span>'
+                        '<span class="differ">0</span>'
+                        '<span class="match">1001001110</span>'
+                    ),
+                    (
+                        8,
+                        '<span class="match">A</span>'
+                        '<span class="differ">AB</span>'
+                        '<span class="match">ABAMA</span>'
+                    ),
+                )
+            ),
+        )
+        for outputs, result in known_values:
+            self.assertEqual(tools.colorize_and_linearize_outputs(outputs),
+                             result)

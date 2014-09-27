@@ -31,11 +31,13 @@ A pillanatnyilag kiválasztott csatorna: a {{channel.verbose_description}}.
 <p>
 <img src="{% static "chain/Anakin_Skywalker_part.jpg" %}" style="width:200px;">
 </p>
+  {% autoescape off %}
   <table class="table">
-  {% for item in run.get_items_linearized %}
-  <tr><td>{{item}}</td></tr>
+  {% for number_of_symbols, colorized_text in  linearized_outputs %}
+  <tr><td>{{number_of_symbols}}</td><td>{{colorized_text}}</td></tr>
   {% endfor %}
   </table>
+  {% endautoescape %}
 <p>
 <img src="{% static "chain/Padme_Amidala.jpg" %}" style="width:200px;">
 </p>
