@@ -6,6 +6,7 @@ from sources.views import (home, source_detail, code_stat, sources,
                            simple_chain, general_chain)
 from coding import FixSource, Source, Code, Channel, Chain
 from sources import tools
+from collections import OrderedDict
 
 source = Source([.25]*4)
 code = Code("00 01 10 11")
@@ -134,7 +135,7 @@ class ToolsTest(TestCase):
 
     def test_get_source(self):
         known_values = {
-            "fix:ALABAMA": FixSource("ALABAMA"),
+            "fix.ALABAMA": FixSource("ALABAMA"),
         }
         for source_description, expected_source in known_values.items():
             source = tools.get_source(source_description)
@@ -158,3 +159,95 @@ class ToolsTest(TestCase):
         }
         for channel_description, expected in known_values.items():
             self.assertEqual(tools.normalize(channel_description), expected)
+
+    def test_color_diff(self):
+        known_values = OrderedDict([
+            (
+                ('AAABBB', 'AAABBB'),
+                (
+                    '<span class="match">AAABBB</span>',
+                    '<span class="match">AAABBB</span>'
+                )
+            ),
+            (
+                ('AAABB', 'AAABBB'),
+                (
+                    '<span class="match">AAABB</span>',
+                    '<span class="match">AAABB</span><span class="differ">B</span>'
+                )
+            ),
+            (
+                ('AAABBD', 'AAABBB'),
+                (
+                    '<span class="match">AAABB</span><span class="differ">D</span>',
+                    '<span class="match">AAABB</span><span class="differ">B</span>'
+                )
+            ),
+            (
+                ('AABDD', 'AACDD'),
+                (
+                    '<span class="match">AA</span><span class="differ">B</span><span class="match">DD</span>',
+                    '<span class="match">AA</span><span class="differ">C</span><span class="match">DD</span>'
+                )
+            ),
+            (
+                ('XAABDD', 'AACDD'),
+                (
+                    "".join([
+                        '<span class="differ">X</span>',
+                        '<span class="match">AA</span>',
+                        '<span class="differ">B</span>',
+                        '<span class="match">DD</span>'
+                    ]),
+                    "".join([
+                        '<span class="match">AA</span>',
+                        '<span class="differ">C</span>',
+                        '<span class="match">DD</span>'
+                    ])
+                )
+            ),
+            # (('AAABBB', 'AABBBB'),
+            #  (('', 'A', 'AABBB'), ('AABBB', 'B'))),
+            # (('AAABBB', 'AAAABB'),
+            #  (('AAABB', 'B'), ('', 'A', 'AAABB'))),
+            # (('AABB', 'AAAB'),
+            #  (('AAB', 'B'), ('', 'A', 'AAB'))),
+        ])
+        for args, result in known_values.items():
+            self.assertEqual(tools.color_diff(*args), list(result))
+
+    def test_can_create_span_with_class(self):
+        known_values = OrderedDict([
+            (
+                ('AAABBB', 'match'),
+                '<span class="match">AAABBB</span>'
+            ),
+            (
+                ('AB', 'differ'),
+                '<span class="differ">AB</span>'
+            ),
+            (
+                ('', 'match'),
+                ''
+            ),
+        ])
+        for args, result in known_values.items():
+            self.assertEqual(tools.span_with_class(*args), result)
+
+    def test_can_create_differing_and_matching_text(self):
+        known_values = OrderedDict([
+            (
+                'AAABBB',
+                (
+                    '<span class="match">AAABBB</span>',
+                    '<span class="differ">AAABBB</span>'
+                )
+            ),
+            (
+                '',
+                ('', '')
+            ),
+        ])
+        for text, results in known_values.items():
+            self.assertEqual(tools.match_span(text), results[0])
+            self.assertEqual(tools.differ_span(text), results[1])
