@@ -2,17 +2,19 @@ from django.shortcuts import render
 import coding
 import collections
 from sources import tools
+from fractions import Fraction
 
 kenobi_symbols = "DAUIYLVO_E"
 sources = {
     1: (
         "Egyforma valószínűségű jelekből álló forrás",
-        coding.Source([.25]*4),
+        coding.Source(4),
         [coding.Code("00 01 10 11"), coding.Code("0 11 101 100")]
     ),
     2: (
         "Eltérő valószínűségű jelekből álló forrás",
-        coding.Source([.5, .25, .125, .125]),
+        coding.Source([Fraction(1, 2), Fraction(1, 4),
+                       Fraction(1, 8), Fraction(1, 8)]),
         [
             coding.Code("00 01 10 11"),
             coding.Code("0 11 101 100"),

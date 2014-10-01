@@ -22,12 +22,12 @@
            <tr class="prob">
                <th>Valószínűség</th>
                {% for prob in source.distribution %}
-               <td>{{prob|floatformat:-3}}</td>{% endfor %}
+               <td>{{prob}}</td>{% endfor %}
            </tr>
            <tr class="prob">
                <th>Információtartalom</th>
                {% for symbol, info in source.information %}
-               <td>{{info|floatformat:-3}} bit</td>{% endfor %}
+               <td>{{info}} bit</td>{% endfor %}
            </tr>
            {% if code %}
            <tr class="code">
