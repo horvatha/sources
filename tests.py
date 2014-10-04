@@ -3,11 +3,13 @@ from django.template.loader import render_to_string
 from django.http import HttpRequest
 from django.test import TestCase
 from sources.views import (home, source_detail, code_stat, sources,
-                           simple_chain, general_chain)
+                           simple_chain, general_chain, get_fix_source,
+                           fix_sources, urlizer)
 from coding import FixSource, Source, Code, Channel, Chain
 import coding
 from sources import tools
 from collections import OrderedDict
+import re
 
 source = Source([.25]*4)
 code = Code("00 01 10 11")
@@ -25,6 +27,16 @@ outputs = fix_source_run.outputs
 #     [tools.color_diff(*[o.message for o in output]) for output in outputs],
 #     sep='\n'
 # )
+
+
+def remove_table_data(text):
+    lines = text.splitlines()
+    span = re.compile("<td>.*?</td>")
+    new_text = []
+    for line in lines:
+        new_line = span.sub("<td></td>", line)
+        new_text.append(new_line)
+    return "\n".join(new_text)
 
 
 class SourceHomePageTest(TestCase):
@@ -99,26 +111,30 @@ class ChainPageTest(TestCase):
                 resolve(url)
 
     def test_simple_chain_returns_correct_html(self):
-        args = source_number, code_number, channel = 3, 1, 0
+        args = source_number, code_number, channel_description = 3, 1, 0
         response = simple_chain(HttpRequest(), *args)
         source_name, source, code_list = sources[source_number]
-        code = code_list[code_number]
-        chain_ = Chain(source, code, Channel(channel))
+        code = code_list[code_number-1]
+        channel = Channel(channel_description)
+        chain_ = Chain(source, code, channel)
         chain_.run()
         run = chain_.runs[0]
         expected_html = render_to_string(
             'sources/chain.html',
             {
-                "source_name": source_name,
                 "source": source,
+                "source_description": urlizer.to_url(str(source)),
                 "code": str(code),
-                "source_number": source_number,
-                "code_number": code_number,
-                "channel": Channel(channel),
-                "run": run,
+                "channel": channel,
+                "linearized_outputs":
+                    tools.colorize_and_linearize_outputs(run.outputs),
+                "fix_source":
+                    get_fix_source(source.symbols, fix_sources)
             }
         )
-        self.assertEqual(response.content.decode(), expected_html)
+        html = response.content.decode()
+        self.assertEqual(remove_table_data(html),
+                         remove_table_data(expected_html))
         self.assertContains(response, "hibament")
         self.assertContains(response, "<table")
         self.assertContains(response, "<tr><td>")
