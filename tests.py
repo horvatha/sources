@@ -111,7 +111,7 @@ class ChainPageTest(TestCase):
             {
                 "source_name": source_name,
                 "source": source,
-                "code": code,
+                "code": str(code),
                 "source_number": source_number,
                 "code_number": code_number,
                 "channel": Channel(channel),
@@ -137,9 +137,25 @@ class CodeStatTest(TestCase):
 
 
 class ToolsTest(TestCase):
+    urlizer_known_values = (
+        ("A:1/4 B:1/4 C:1/4 D:1/4", "A:1r4 B:1r4 C:1r4 D:1r4"),
+        ("A:0.1 B:0.7 C:0.2", "A:0.1 B:0.7 C:0.2"),
+    )
+
+    def test_argument_URLizer_decoder_returns_proper_values(self):
+        urlizer = tools.Argument_URLizer()
+        for from_, to in self.urlizer_known_values:
+            self.assertEqual(urlizer.to_url(from_), to)
+
+    def test_argument_URLizer_coder_returns_proper_values(self):
+        urlizer = tools.Argument_URLizer()
+        for to, from_ in self.urlizer_known_values:
+            self.assertEqual(urlizer.from_url(from_), to)
+
     def test_get_distribution_and_symbols(self):
         known_values = {
             "X:.2 B:.8": ([.2, .8], "XB"),
+            "X:1/4 B:3/4": ([1/4, 3/4], "XB"),
         }
         for source_description, values in known_values.items():
             expected_distribution, expected_symbols = values

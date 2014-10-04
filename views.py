@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import coding
 import collections
 from sources import tools
@@ -33,6 +33,25 @@ sources = {
         ]
     ),
 }
+fix_sources = (
+    'I_LOVE_YOU',
+    'ABCABACADACA',
+    'ALABAMA',
+    'CASABLANCA',
+)
+urlizer = tools.Argument_URLizer()
+
+
+def get_fix_source(symbols, words):
+    if not isinstance(symbols, (set, frozenset)):
+        symbols = set(symbols)
+    fix_sources_with_this_symbols = [
+        fix_source
+        for fix_source in fix_sources
+        if set(fix_source) <= symbols
+    ]
+    if fix_sources_with_this_symbols:
+        return "fix." + fix_sources_with_this_symbols[0]
 
 
 def home(request):
@@ -100,23 +119,28 @@ def simple_chain(request, source_number, code_number, channel):
         "sources/chain.html",
         {
             "source": source,
-            "code": code,
+            "source_description": urlizer.to_url(str(source)),
+            "code": str(code),
             "channel": channel,
             "linearized_outputs":
-            tools.colorize_and_linearize_outputs(run.outputs)
+                tools.colorize_and_linearize_outputs(run.outputs),
+            "fix_source":
+                get_fix_source(source.symbols, fix_sources)
         }
     )
 
 
 def general_chain(request, source_description,
-                  code_description, channel_description, hamming_block_length):
-    source = tools.get_source(source_description)
+                  code_description, channel_description,
+                  hamming_block_length):
+    source = tools.get_source(urlizer.from_url(source_description))
     code = tools.get_code(code_description)
     assert set(code.symbols) >= set(source.symbols)
     channel = tools.get_channel(channel_description)
     elements = [source, code, channel]
     if hamming_block_length:
-        elements.insert(-1, coding.Hamming(int(hamming_block_length[:-1])))
+        hamming_block_length = hamming_block_length[:-1]
+        elements.insert(-1, coding.Hamming(int(hamming_block_length)))
     chain = coding.Chain(*elements)
     chain.run()
     run = chain.runs[0]
@@ -125,9 +149,36 @@ def general_chain(request, source_description,
         "sources/chain.html",
         {
             "source": source,
-            "code": code,
+            "source_description": urlizer.to_url(str(source)),
+            "code": str(code),
             "channel": channel,
             "linearized_outputs":
-            tools.colorize_and_linearize_outputs(run.outputs)
+                tools.colorize_and_linearize_outputs(run.outputs),
+            "fix_source":
+                get_fix_source(source.symbols, fix_sources),
+            "hamming_block_length": hamming_block_length,
         }
+    )
+
+
+def change_source(request, source_description, code_description):
+    pass
+
+
+def change_code(request, source_description, code_description):
+    pass
+
+
+def change_error_handler(request, source_description, code_description):
+    pass
+
+
+def change_channel(request, source_description, code_description):
+    channel_description = request.POST['channel_description']
+    return redirect(
+        '/sources/{}/{}/{}/'.format(
+            source_description,
+            code_description,
+            channel_description,
+        )
     )

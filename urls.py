@@ -19,9 +19,20 @@ urlpatterns = patterns(
         r'(?P<channel>[\[\],.0-9]+)/$',
         'sources.views.simple_chain',
         name='simple_chain'),
-    url(
-        general_chain_pattern,
+    url(general_chain_pattern,
         'sources.views.general_chain',
-        name='general_chain'
-    ),
+        name='general_chain'),
+
+    url(r'^change_source/([^/]+)/([^/]+)/$',
+        'sources.views.change_source',
+        name='change_source'),
+    url(r'^change_code/([^/]+)/([^/]+)/$',
+        'sources.views.change_code',
+        name='change_code'),
+    url(r'^change_error_handler/([^/]+)/([^/]+)/$',
+        'sources.views.change_error_handler',
+        name='change_error_handler'),
+    url(r'^change_channel/([^/]+)/([^/]+)/$',
+        'sources.views.change_channel',
+        name='change_channel'),
 )

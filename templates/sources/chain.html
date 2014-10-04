@@ -8,24 +8,103 @@
 {% block jumbotron %}
 <p>
 Ezen az oldalon a teljes információs láncot láthatod, amelyben a forrástól
-kiindul az üzenet, majd kódolás után átmegy egy csatornán, majd a vevő megkapja
-a dekódolt szöveget, amely hibás is lehet, ha a csatorna hibásan adta tovább a
-bitsorozatot.
-</p>
-
-<p>
-A pillanatnyilag kiválasztott csatorna: a {{channel.verbose_description}}.
-</p>
-
-<p>
-<a class="btn btn-primary btn-lg" role="button" href="{% url "general_chain" "fix.I_LOVE_YOU" code "[24]" %}">Fix forrás és hibás csatorna &raquo;</a>
-</p>
-<p>
-<a class="btn btn-primary btn-lg" role="button" href="{% url "general_chain" "fix.I_LOVE_YOU" code "[24]" %}8/">Fix forrás, hibás csatorna és hibajavítás &raquo;</a>
+kiindul az üzenet, majd egy vagy több kódolás után átmegy egy csatornán, majd a
+vevő megkapja a dekódolt szöveget, amely hibás is lehet, vagy
+visszaállíthatatlan, ha a csatorna hibásan adta tovább a bitsorozatot.
 </p>
 {% endblock jumbotron %}
 
 {% block content %}
+   <div class="page-header">
+      <h1>Az információs lánc összetevői</h1>
+   </div>
+   <div class="row">
+     <div class="col-md-6">
+       <div class="panel panel-default">
+         <div class="panel-heading">
+           <h3 class="panel-title">Forrás</h3>
+         </div>
+         <div class="panel-body">
+            <p>
+            A pillanatnyilag kiválasztott forrás: {{source}}.
+            </p>
+
+        <form method="POST" action="{% url "change_source" source_description code %}">
+            <input name="source_description" id="id_source_change" class="form-control input-lg" placeholder="Változtatáshoz forrásleíró és Újsor."/>
+          {% csrf_token %}
+        </form>
+         </div>
+       </div>
+     </div><!-- /.col-sm-6 -->
+     <div class="col-md-6">
+       <div class="panel panel-default">
+         <div class="panel-heading">
+           <h3 class="panel-title">Csatorna</h3>
+         </div>
+         <div class="panel-body">
+            <p>
+            A pillanatnyilag kiválasztott csatorna: {{channel.verbose_description}}.
+            </p>
+
+        <form method="POST" action="{% url "change_channel" source_description code %}">
+          <input name="channel_description" id="id_channel_change" class="form-control input-lg" placeholder="Változtatáshoz csatornaleíró és Újsor."/>
+          {% csrf_token %}
+        </form>
+         </div>
+       </div>
+     </div><!-- /.col-sm-6 -->
+   </div>
+   <div class="row">
+     <div class="col-md-6">
+       <div class="panel panel-default">
+         <div class="panel-heading">
+           <h3 class="panel-title">Forráskódoló kód</h3>
+         </div>
+         <div class="panel-body">
+            <p>
+            A pillanatnyilag kiválasztott kód: {{code}}.
+            </p>
+
+        <form method="POST" action="{% url "change_code" source_description code %}">
+            <input name="code_description" id="id_code_change" class="form-control input-lg" placeholder="Változtatáshoz kódleíró és Újsor."/>
+          {% csrf_token %}
+        </form>
+         </div>
+       </div>
+     </div><!-- /.col-sm-6 -->
+     <div class="col-md-6">
+       <div class="panel panel-default">
+         <div class="panel-heading">
+           <h3 class="panel-title">Hibajelző/javító kód</h3>
+         </div>
+         <div class="panel-body">
+            <p> A pillanatnyi hibajavító/hibajelző kódolás:
+            {% if hamming_block_length %}
+            Hamming-kód, amely {{hamming_block_length}} bitenként kódol.
+            {% else %}
+            nincs.
+            {% endif %}
+            </p>
+
+        <form method="POST" action="{% url "change_error_handler" source_description code %}">
+            <input name="error_handler_description" id="id_error_handler_change" class="form-control input-lg" placeholder="Változtatáshoz hibakezelő-leíró és Újsor."/>
+          {% csrf_token %}
+        </form>
+         </div>
+       </div>
+     </div><!-- /.col-sm-6 -->
+   </div>
+
+
+
+<div class="col-md-12">
+<p>
+<a class="btn btn-primary btn-lg" role="button" href="{% url "general_chain" fix_source code "[24]" %}">Fix forrás és hibás csatorna &raquo;</a>
+</p>
+<p>
+<a class="btn btn-primary btn-lg" role="button" href="{% url "general_chain" fix_source code "[24]" %}8/">Fix forrás, hibás csatorna és hibajavítás &raquo;</a>
+</p>
+</div>
 
 <div class="col-md-6">
 <p>

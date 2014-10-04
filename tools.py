@@ -1,15 +1,38 @@
 import coding
 import itertools
+from fractions import Fraction
+
+
+class Argument_URLizer:
+    table = (
+        ('/', 'r'),
+    )
+
+    def to_url(self, arguments):
+        for from_, to in self.table:
+            arguments = arguments.replace(from_, to)
+        return arguments
+
+    def from_url(self, arguments):
+        for to, from_ in self.table:
+            arguments = arguments.replace(from_, to)
+        return arguments
 
 
 def get_distribution_and_symbols(source_description):
     symbols = []
     distribution = []
     for i in source_description.split():
-        symbol, probablity = i.split(':')
+        symbol, probability = i.split(':')
+
         symbols.append(symbol)
-        probablity = float(probablity)
-        distribution.append(probablity)
+
+        if '/' in probability:
+            numerator, denominator = probability.split("/")
+            probability = Fraction(int(numerator), int(denominator))
+        else:
+            probability = float(probability)
+        distribution.append(probability)
     return distribution, "".join(symbols)
 
 
