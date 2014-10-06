@@ -1,6 +1,7 @@
 *.py[cod]
-*.swp
+*.sw[pon]
 .ropeproject
+Session.vim
 
 # C extensions
 *.so
