@@ -1,0 +1,28 @@
+{% extends "arithmetic/decoding_exercise.html" %}
+
+{% block buttons %}
+{% endblock buttons %}
+
+{% block content %}
+<div class="col-md-6">
+    <table class="table">
+    <tr><th>Jel</th><th>alsó határ</th><th>felső határ</th><tr>
+    {% for symbol, limits in intervals.items %}
+    <tr><td>{{symbol}}</td>{% for limit in limits %}<td>{{limit|floatformat:"3"}}</td>{% endfor %}<tr>
+    {% endfor %}
+    </table>
+</div>
+
+<div class="col-md-6">
+    <table class="table">
+    <tr><th>Szórész</th><th>pillanatnyi kód</th><tr>
+    {% for part, current_code in decoder_steps %}
+    <tr><td>{{part}}</td><td>{{current_code|floatformat:"6"}}</td><tr>
+    {% endfor %}
+    </table>
+</div>
+
+A kapott szöveg tehát "{{text}}".
+{% endblock content %}
+
+

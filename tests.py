@@ -5,6 +5,7 @@ from django.test import TestCase
 from sources.views import (home, source_detail, code_stat, sources,
                            simple_chain, general_chain, get_fix_source,
                            fix_sources, urlizer)
+from sources.arithmetic import views
 from coding import FixSource, Source, Code, Channel, Chain
 import coding
 from sources import tools
@@ -356,3 +357,25 @@ class ToolsTest(TestCase):
         for outputs, result in known_values:
             self.assertEqual(tools.colorize_and_linearize_outputs(outputs),
                              result)
+
+
+class ArithmeticHomePageTest(TestCase):
+    def test_source_url_resolves_home_page_view(self):
+        found = resolve("/arithmetic/")
+        self.assertEqual(found.func, views.home)
+
+    def test_home_page_returns_correct_html(self):
+        response = views.home(HttpRequest())
+        expected_html = render_to_string('arithmetic/home.html', {})
+        self.assertEqual(response.content.decode(), expected_html)
+
+
+class ArithmeticCodingExercisePageTest(TestCase):
+    def test_source_url_resolves_home_page_view(self):
+        found = resolve("/arithmetic/coding/random/exercise/")
+        self.assertEqual(found.func, views.coding_exercise)
+
+    def test_home_page_returns_correct_html(self):
+        response = views.coding_exercise(HttpRequest())
+        expected_html = render_to_string('arithmetic/coding_exercise.html', {})
+        self.assertEqual(response.content.decode(), expected_html)

@@ -1,0 +1,28 @@
+{% extends "arithmetic/coding_exercise.html" %}
+
+{% block buttons %}
+{% endblock buttons %}
+
+{% block content %}
+<div class="col-md-6">
+    <table class="table">
+    <tr><th>Jel</th><th>alsó határ</th><th>felső határ</th><tr>
+    {% for symbol, limits in intervals.items %}
+    <tr><td>{{symbol}}</td>{% for limit in limits %}<td>{{limit|floatformat:"3"}}</td>{% endfor %}<tr>
+    {% endfor %}
+    </table>
+</div>
+
+<div class="col-md-6">
+    <table class="table">
+    <tr><th>Szórész</th><th>alsó határ</th><th>felső határ</th><tr>
+    {% for part, lower, upper in coder_intervals %}
+    <tr><td>{{part}}</td><td>{{lower|floatformat:"6"}}</td><td>{{upper|floatformat:"6"}}</td><tr>
+    {% endfor %}
+    </table>
+</div>
+
+A kapott kódszónak az utolsó intervallumból kell kikerülnie, például az intervallum közepe:
+{{code_value|floatformat:"6"}}
+{% endblock content %}
+

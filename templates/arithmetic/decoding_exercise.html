@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %} &ndash; Aritmetikai dekódolási feladat{% endblock title %}
+
+{% block header %}Aritmetikai dekódolási feladat{% endblock header %}
+
+{% block jumbotron %}
+<p>
+A {{sample}} minta alapján határozza meg az aritmetikai kódolás intervallumait,
+és dekódolja a {{code_value|floatformat:"6"}} kódhoz tartozó {{text|length}} hosszúságú szöveget!
+</p>
+
+{% block buttons %}
+<form action="{% url "arithmetic_decoding_solution" %}" method="post">
+    <input type="hidden" name="sample" value="{{sample}}">
+    <input type="hidden" name="text" value="{{text}}">
+    <input type="submit" value="Megoldás &raquo;" class="btn btn-primary btn-lg" role="button"/>
+    {% csrf_token %}
+</form>
+{% endblock buttons %}
+{% endblock jumbotron %}
+
+{% block content %}
+{% endblock content %}
