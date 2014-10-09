@@ -7,8 +7,6 @@
 {% block main_url %}{% url "arithmetic_home" %}{% endblock main_url %}
 
 {% block jumbotron %}
-<p>Üdvözöllek az oldalon!</p>
-
 <p>
   Ezen az oldalon az aritmetikai kódolással ismerkedhetsz meg. A kódolás és
   dekódolás folyamatát videó mutatja be, és változatos feladatokon próbálhatod
@@ -16,7 +14,7 @@
 </p>
 
 <p>
-  A kódolásról videók érhetőek el a következő oldalon: 
+  A kódolásról videók érhetőek el a következő oldalon:
   <a href="http://django.arek.uni-obuda.hu/segedletek/kodolas.html" class="btn btn-primary btn-lg" role="button">Kódolásokat tanító videók &raquo;</a>
 </p>
 
@@ -28,8 +26,6 @@
 <a href="{% url "arithmetic_decoding_exercise" %}" class="btn btn-primary btn-lg" role="button">Dekódolás gyakorlása &raquo;</a>
 </p>
 {% endblock jumbotron %}
-
-<iframe width="560" height="315" src="//www.youtube.com/embed/Vz3LT2S341I" frameborder="0" allowfullscreen></iframe>
 
 {% block content %}
 {% endblock content %}

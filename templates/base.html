@@ -18,7 +18,7 @@
     <link href="{% static "bootstrap/css/bootstrap-theme.min.css" %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="theme.css" rel="stylesheet">
+    <link href="{% static "css/theme.css" %}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -53,7 +53,6 @@
                 <li><a href="{% url "source_home" %}">Az informatikai lánc vizsgálata</a></li>
                 <li><a href="{% url "arithmetic_home" %}">Az aritmetikai kódolás gyakorlása</a></li>
         <!--
-                <li><a href="#">Something else here</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Nav header</li>
                 <li><a href="#">Separated link</a></li>
