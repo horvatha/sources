@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     '',
-    url(r'^$', 'sources.arithmetic.views.home', name='source_home'),
+    url(r'^$', 'sources.arithmetic.views.home', name='arithmetic_home'),
     url(r'^coding/random/exercise/$',
         'sources.arithmetic.views.coding_exercise',
         name='arithmetic_coding_exercise'

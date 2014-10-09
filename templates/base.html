@@ -44,23 +44,23 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="{% url "source_home" %}">Főoldal</a></li>
+            <li class="active"><a href="{% block main_url %}{% url "source_home" %}{% endblock main_url %}">Főoldal</a></li>
             <li><a href="{% url "about" %}">Az oldalról</a></li>
             <li><a href="{% url "contact" %}">Kapcsolat</a></li>
-        <!--
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lehetőségek<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
+                <li><a href="{% url "source_home" %}">Az informatikai lánc vizsgálata</a></li>
+                <li><a href="{% url "arithmetic_home" %}">Az aritmetikai kódolás gyakorlása</a></li>
+        <!--
                 <li><a href="#">Something else here</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Nav header</li>
                 <li><a href="#">Separated link</a></li>
                 <li><a href="#">One more separated link</a></li>
+        -->
               </ul>
             </li>
-        -->
           </ul>
     {% endblock navbar %}
         </div><!--/.nav-collapse -->
@@ -74,8 +74,6 @@
         <h1>{% block header %}{% endblock header %}</h1>
         {% block jumbotron %}{% endblock jumbotron %}
       </div>
-
-
 
     {% block content %}
     {% endblock content %}
