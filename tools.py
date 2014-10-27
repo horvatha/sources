@@ -56,9 +56,9 @@ def get_channel(channel_description):
 
 
 def normalize(channel_description):
-    if isinstance(channel_description, str) and \
-            channel_description.startswith("["):
-        channel_description = eval(channel_description)
+    if isinstance(channel_description, str):
+        if channel_description.startswith("["):
+            channel_description = eval(channel_description)
     return channel_description
 
 

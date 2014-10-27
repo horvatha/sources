@@ -41,16 +41,47 @@
    <div class="col-md-1">
    </div>
    <div class="col-md-3">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Entrópia</h3>
-            </div>
-            <div class="panel-body prob">
-              A következő szimbólum várható információtartalma,
-              azaz a forrás entrópiája:<br>
-              {{source.entropy|floatformat:-3}} bit szimbólumonként.
-            </div>
-          </div>
+       <div class="panel panel-default">
+         <div class="panel-heading">
+           <h3 class="panel-title">Entrópia</h3>
+         </div>
+         <div class="panel-body prob">
+             <p>
+           A következő szimbólum várható információtartalma,
+           azaz a <span class="value">forrás entrópiája</span>:<br>
+           {{source.entropy|floatformat:-3}} bit szimbólumonként.
+             </p>
+         </div>
+       </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-8">
+       <div class="panel panel-default">
+         <div class="panel-heading">
+           <h3 class="panel-title">Hatásfok és redundancia</h3>
+         </div>
+         <div class="panel-body prob">
+             <p>
+             Mivel a forrás {{source.n}} jelből áll, ezért a forrás
+             entrópiája maximálisan H<sub>max</sub> = log<sub>2</sub>
+             {{source.n}} = {{source.max_entropy|floatformat:-3}} bit
+             lehetne szimbólumonként, ha mindegyik szimbólum valószínűsége
+             1/{{source.n}} lenne.
+             </p>
+
+             <p>
+             A <span class="value">forrás hatásfoka</span> <br \>
+             &eta; = H/H<sub>max</sub> =
+         {{source.efficiency|floatformat:-3}}.
+             </p>
+
+             <p>
+             A <span class="value">forrás redundanciája</span> <br \>
+             R =  1 &minus; &eta; = {{source.redundancy|floatformat:-3}}.
+             </p>
+         </div>
+       </div>
    </div>
 </div>
 
@@ -83,7 +114,7 @@
      </table>
    </div>
 
-   <p><a class="btn btn-primary btn-lg" role="button" href="{% url "simple_chain" id code_number 0 %}">Az információs lánc vizsgálata &raquo;</a></p>
+   <p><a class="btn btn-primary btn-lg" role="button" href="{% url "simple_chain" id code_number 0 %}">Az kommunikációs rendszer vizsgálata &raquo;</a></p>
 
 {% else %}
   <div class="page-header">
