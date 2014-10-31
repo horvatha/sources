@@ -176,9 +176,8 @@ def change_error_handler(request, source_description, code_description):
 def change_channel(request, source_description, code_description):
     channel_description = request.POST['channel_description']
     return redirect(
-        '/sources/{}/{}/{}/'.format(
-            source_description,
-            code_description,
-            channel_description,
-        )
+        general_chain,
+        source_description,
+        code_description,
+        channel_description,
     )
