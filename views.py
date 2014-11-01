@@ -122,6 +122,9 @@ def simple_chain(request, source_number, code_number, channel):
             "source_description": urlizer.to_url(str(source)),
             "code": str(code),
             "channel": channel,
+            "channel_description_with_hamming":
+                channel.description,
+            "hamming_block_length": None,
             "linearized_outputs":
                 tools.colorize_and_linearize_outputs(run.outputs),
             "fix_source":
@@ -137,10 +140,16 @@ def general_chain(request, source_description,
     code = tools.get_code(code_description)
     assert set(code.symbols) >= set(source.symbols)
     channel = tools.get_channel(channel_description)
+
     elements = [source, code, channel]
     if hamming_block_length:
         hamming_block_length = hamming_block_length[:-1]
         elements.insert(-1, coding.Hamming(int(hamming_block_length)))
+
+    channel_description_with_hamming = channel.description
+    if hamming_block_length:
+        channel_description_with_hamming += ("/" + hamming_block_length)
+
     chain = coding.Chain(*elements)
     chain.run()
     run = chain.runs[0]
@@ -152,6 +161,8 @@ def general_chain(request, source_description,
             "source_description": urlizer.to_url(str(source)),
             "code": str(code),
             "channel": channel,
+            "channel_description_with_hamming":
+                channel_description_with_hamming,
             "linearized_outputs":
                 tools.colorize_and_linearize_outputs(run.outputs),
             "fix_source":
@@ -173,11 +184,23 @@ def change_error_handler(request, source_description, code_description):
     pass
 
 
-def change_channel(request, source_description, code_description):
+def change_communication_system(
+    request,
+    source_description, code_description,
+    channel_description_with_hamming,
+    element_to_change
+):
     channel_description = request.POST['channel_description']
+    splitted_channel = channel_description_with_hamming.split('/')
+    if len(splitted_channel) == 2:
+        hamming_block_length = splitted_channel[1] + '/'
+    elif len(splitted_channel) == 1:
+        hamming_block_length = None
+
     return redirect(
         general_chain,
         source_description,
         code_description,
         channel_description,
+        hamming_block_length,
     )

@@ -46,7 +46,7 @@ visszaállíthatatlan, ha a csatorna hibásan adta tovább a bitsorozatot.
             A pillanatnyilag kiválasztott csatorna: {{channel.verbose_description}}.
             </p>
 
-        <form method="POST" action="{% url "change_channel" source_description code %}">
+        <form method="POST" action="{% url "change_channel" source_description code channel_description_with_hamming %}">
           <input name="channel_description" id="id_channel_change" class="form-control input-lg" placeholder="Változtatáshoz csatornaleíró és Újsor."/>
           {% csrf_token %}
         </form>

@@ -32,7 +32,8 @@ urlpatterns = patterns(
     url(r'^change_error_handler/([^/]+)/([^/]+)/$',
         'sources.views.change_error_handler',
         name='change_error_handler'),
-    url(r'^change_channel/([^/]+)/([^/]+)/$',
-        'sources.views.change_channel',
+    url(r'^change_channel/([^/]+)/([^/]+)/([^/]+/?[^/]?)/$',
+        'sources.views.change_communication_system',
+        {"element_to_change": "channel"},
         name='change_channel'),
 )

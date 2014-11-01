@@ -127,6 +127,8 @@ class ChainPageTest(TestCase):
                 "source_description": urlizer.to_url(str(source)),
                 "code": str(code),
                 "channel": channel,
+                "channel_description_with_hamming":
+                    channel.description,
                 "linearized_outputs":
                     tools.colorize_and_linearize_outputs(run.outputs),
                 "fix_source":
