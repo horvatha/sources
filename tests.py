@@ -85,6 +85,8 @@ class ChainPageTest(TestCase):
             "/sources/3/1/[3,6]/",
             "/sources/3/1/0.1/",
             "/sources/3/1/0.1/",
+            "/sources/3/1/0.1/8/",
+            "/sources/3/1/0.1/10/",
         ),
         general_chain: (
             "/sources/fix:3/1/0/",
@@ -112,7 +114,8 @@ class ChainPageTest(TestCase):
                 resolve(url)
 
     def test_simple_chain_returns_correct_html(self):
-        args = source_number, code_number, channel_description = 3, 1, 0
+        args = source_number, code_number, channel_description,\
+            hamming_block_length = 3, 1, 0, None
         response = simple_chain(HttpRequest(), *args)
         source_name, source, code_list = sources[source_number]
         code = code_list[code_number-1]

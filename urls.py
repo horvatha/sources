@@ -16,7 +16,8 @@ urlpatterns = patterns(
     url(r'^(\d+)/(\d+)/$', 'sources.views.sourcestat_default',
         name='sourcestat_default'),
     url(r'^(?P<source_number>\d+)/(?P<code_number>\d+)/'
-        r'(?P<channel>[\[\],.0-9]+)/$',
+        r'(?P<channel_description>[\[\],.0-9]+)/'
+        r'(?P<hamming_block_length>\d+/)?$',
         'sources.views.simple_chain',
         name='simple_chain'),
     url(general_chain_pattern,

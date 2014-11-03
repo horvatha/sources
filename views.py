@@ -107,30 +107,15 @@ def sourcestat_default(request, id, code_number):
     )
 
 
-def simple_chain(request, source_number, code_number, channel):
-    source_name, source, codes = sources[int(source_number)]
-    code = codes[int(code_number)-1]
-    channel = coding.Channel(channel)
-    chain = coding.Chain(source, code, channel)
-    chain.run()
-    run = chain.runs[0]
-    return render(
-        request,
-        "sources/chain.html",
-        {
-            "source": source,
-            "source_description": urlizer.to_url(str(source)),
-            "code": str(code),
-            "channel": channel,
-            "channel_description_with_hamming":
-                channel.description,
-            "hamming_block_length": None,
-            "linearized_outputs":
-                tools.colorize_and_linearize_outputs(run.outputs),
-            "fix_source":
-                get_fix_source(source.symbols, fix_sources)
-        }
-    )
+def simple_chain(request, source_number, code_number,
+                 channel_description, hamming_block_length):
+    _, source, codes = sources[int(source_number)]
+    source_description = str(source)
+    code_description = str(codes[int(code_number)-1])
+    return general_chain(
+        request, source_description,
+        code_description, channel_description,
+        hamming_block_length)
 
 
 def general_chain(request, source_description,
