@@ -36,7 +36,7 @@ sources = {
 fix_sources = (
     'I_LOVE_YOU',
     'ABCABACADACA',
-    'ALABAMA',
+    'ALABAMAMAMA',
     'CASABLANCA',
 )
 urlizer = tools.Argument_URLizer()
@@ -110,7 +110,7 @@ def sourcestat_default(request, id, code_number):
 def simple_chain(request, source_number, code_number,
                  channel_description, hamming_block_length):
     _, source, codes = sources[int(source_number)]
-    source_description = str(source)
+    source_description = str(source).replace('/', 'r')
     code_description = str(codes[int(code_number)-1])
     return general_chain(
         request, source_description,
@@ -127,13 +127,9 @@ def general_chain(request, source_description,
     channel = tools.get_channel(channel_description)
 
     elements = [source, code, channel]
+    hamming_block_length = int(hamming_block_length)
     if hamming_block_length:
-        hamming_block_length = hamming_block_length[:-1]
-        elements.insert(-1, coding.Hamming(int(hamming_block_length)))
-
-    channel_description_with_hamming = channel.description
-    if hamming_block_length:
-        channel_description_with_hamming += ("/" + hamming_block_length)
+        elements.insert(-1, coding.Hamming(hamming_block_length))
 
     chain = coding.Chain(*elements)
     chain.run()
@@ -146,8 +142,8 @@ def general_chain(request, source_description,
             "source_description": urlizer.to_url(str(source)),
             "code": str(code),
             "channel": channel,
-            "channel_description_with_hamming":
-                channel_description_with_hamming,
+            "channel_description":
+                channel.description,
             "linearized_outputs":
                 tools.colorize_and_linearize_outputs(run.outputs),
             "fix_source":
@@ -157,35 +153,22 @@ def general_chain(request, source_description,
     )
 
 
-def change_source(request, source_description, code_description):
-    pass
-
-
-def change_code(request, source_description, code_description):
-    pass
-
-
-def change_error_handler(request, source_description, code_description):
-    pass
-
-
 def change_communication_system(
     request,
     source_description, code_description,
-    channel_description_with_hamming,
+    channel_description,
+    hamming_block_length,
     element_to_change
 ):
-    channel_description = request.POST['channel_description']
-    splitted_channel = channel_description_with_hamming.split('/')
-    if len(splitted_channel) == 2:
-        hamming_block_length = splitted_channel[1] + '/'
-    elif len(splitted_channel) == 1:
-        hamming_block_length = None
+    kwargs = dict(
+        source_description=source_description,
+        code_description=code_description,
+        channel_description=channel_description,
+        hamming_block_length=hamming_block_length,
+    )
+    kwargs[element_to_change] = request.POST[element_to_change]
 
     return redirect(
         general_chain,
-        source_description,
-        code_description,
-        channel_description,
-        hamming_block_length,
+        **kwargs
     )

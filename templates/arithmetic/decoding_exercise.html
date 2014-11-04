@@ -14,7 +14,7 @@ A {{sample}} minta alapján határozza meg az aritmetikai kódolás intervalluma
 <form action="{% url "arithmetic_decoding_solution" %}" method="post">
     <input type="hidden" name="sample" value="{{sample}}">
     <input type="hidden" name="text" value="{{text}}">
-    <input type="submit" value="Megoldás &raquo;" class="btn btn-primary btn-lg" role="button"/>
+    <input type="submit" value="Megoldás" class="btn btn-primary btn-lg" role="button"/>
     {% csrf_token %}
 </form>
 {% endblock buttons %}

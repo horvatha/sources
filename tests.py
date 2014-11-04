@@ -4,7 +4,8 @@ from django.http import HttpRequest
 from django.test import TestCase
 from sources.views import (home, source_detail, code_stat, sources,
                            simple_chain, general_chain, get_fix_source,
-                           fix_sources, urlizer)
+                           fix_sources, urlizer, change_communication_system
+                           )
 from sources.arithmetic import views
 from coding import FixSource, Source, Code, Channel, Chain
 import coding
@@ -74,7 +75,7 @@ class SourceDetailPageTest(TestCase):
 
 url_start = '/sources/fix:I_LOVE_YOU/'
 code_desc = \
-    'I:0000,A:000100,D:000101,U:00011,V:001,Y:0100,L:0101,O:011,_:10,E:11'
+    'I:0000 A:000100 D:000101 U:00011 V:001 Y:0100 L:0101 O:011 _:10 E:11'
 
 
 class ChainPageTest(TestCase):
@@ -85,8 +86,8 @@ class ChainPageTest(TestCase):
             "/sources/3/1/[3,6]/",
             "/sources/3/1/0.1/",
             "/sources/3/1/0.1/",
-            "/sources/3/1/0.1/8/",
-            "/sources/3/1/0.1/10/",
+            "/sources/3/1/0.1/",
+            "/sources/3/1/0.1/",
         ),
         general_chain: (
             "/sources/fix:3/1/0/",
@@ -102,10 +103,10 @@ class ChainPageTest(TestCase):
         url_start + code_desc + "/0/x5/",
     )
 
-    def test_simple_chain_url_resolves_chain_view(self):
+    def test_chain_urls_resolve_chain_view(self):
         for func, urls in self.url_dict.items():
             for url in urls:
-                found = resolve(url)
+                found = resolve(url + '8/')
                 self.assertEqual(found.func, func)
 
     def test_bad_urls_does_not_resolve(self):
@@ -114,36 +115,67 @@ class ChainPageTest(TestCase):
                 resolve(url)
 
     def test_simple_chain_returns_correct_html(self):
-        args = source_number, code_number, channel_description,\
-            hamming_block_length = 3, 1, 0, None
-        response = simple_chain(HttpRequest(), *args)
-        source_name, source, code_list = sources[source_number]
-        code = code_list[code_number-1]
-        channel = Channel(channel_description)
-        chain_ = Chain(source, code, channel)
-        chain_.run()
-        run = chain_.runs[0]
-        expected_html = render_to_string(
-            'sources/chain.html',
-            {
-                "source": source,
-                "source_description": urlizer.to_url(str(source)),
-                "code": str(code),
-                "channel": channel,
-                "channel_description_with_hamming":
-                    channel.description,
-                "linearized_outputs":
-                    tools.colorize_and_linearize_outputs(run.outputs),
-                "fix_source":
-                    get_fix_source(source.symbols, fix_sources)
-            }
+        args_list = [
+            (3, 1, 0, 0),
+            (2, 1, 0, 0),
+            (2, 1, 0, 8),
+        ]
+        for args in args_list:
+            source_number, code_number, channel_description,\
+                hamming_block_length = args
+            response = simple_chain(HttpRequest(), *args)
+            source_name, source, code_list = sources[source_number]
+            code = code_list[code_number-1]
+            channel = Channel(channel_description)
+            chain_ = Chain(source, code, channel)
+            chain_.run()
+            run = chain_.runs[0]
+            expected_html = render_to_string(
+                'sources/chain.html',
+                {
+                    "source": source,
+                    "source_description": urlizer.to_url(str(source)),
+                    "code": str(code),
+                    "channel": channel,
+                    "channel_description":
+                        channel.description,
+                    "hamming_block_length":
+                        hamming_block_length,
+                    "linearized_outputs":
+                        tools.colorize_and_linearize_outputs(run.outputs),
+                    "fix_source":
+                        get_fix_source(source.symbols, fix_sources)
+                }
+            )
+            html = response.content.decode()
+            self.assertEqual(remove_table_data(html),
+                             remove_table_data(expected_html))
+            self.assertContains(response, "hibament")
+            self.assertContains(response, "<table")
+            self.assertContains(response, "<tr><td>")
+
+
+class ChangeCommunicationSystem_ViewTest(TestCase):
+    def test_sys_changing_urls_resolve_this_view(self):
+        view = change_communication_system
+        for url in (
+            '/sources/change_channel/fix.ABCABACADACA/'
+            'A:00 B:01 C:10 D:11/bits=24/0/',
+        ):
+            found = resolve(url)
+            self.assertEqual(found.func, view)
+
+    def test_redirects_after_POST_request(self):
+        response = self.client.post(
+            '/sources/change_channel/fix.ABCABACADACA/'
+            'A:00 B:01 C:10 D:11/bits=24/0/',
+            {'channel_description': '0.025'}
         )
-        html = response.content.decode()
-        self.assertEqual(remove_table_data(html),
-                         remove_table_data(expected_html))
-        self.assertContains(response, "hibament")
-        self.assertContains(response, "<table")
-        self.assertContains(response, "<tr><td>")
+        self.assertRedirects(
+            response,
+            'sources/fix.ABCABACADACA/'
+            'A%3A00%20B%3A01%20C%3A10%20D%3A11/0.025/0/'
+        )
 
 
 class CodeStatTest(TestCase):
@@ -383,4 +415,23 @@ class ArithmeticCodingExercisePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         response = views.coding_exercise(HttpRequest())
         expected_html = render_to_string('arithmetic/coding_exercise.html', {})
-        self.assertEqual(response.content.decode()[:2950], expected_html[:2950])
+        limit = 2950  # Limit added because of the random content.
+        self.assertEqual(
+            response.content.decode()[:limit],
+            expected_html[:limit])
+
+
+class ArithmeticDecodingExercisePageTest(TestCase):
+    def test_source_url_resolves_home_page_view(self):
+        found = resolve("/arithmetic/decoding/random/exercise/")
+        self.assertEqual(found.func, views.decoding_exercise)
+
+    def test_home_page_returns_correct_html(self):
+        response = views.decoding_exercise(HttpRequest())
+        expected_html = render_to_string(
+            'arithmetic/decoding_exercise.html',
+            {})
+        limit = 2950  # Limit added because of the random content.
+        self.assertEqual(
+            response.content.decode()[:limit],
+            expected_html[:limit])

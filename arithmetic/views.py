@@ -12,14 +12,18 @@ def get_random_sample_and_text():
 
 def get_code_dict(sample, text):
     code = arithmetic.ArithmeticCode(sample)
-    intervals = code.intervals
+    probability_and_intervals = []
+    for symbol in code.intervals:
+        lower, upper = code.intervals[symbol]
+        probability_and_intervals.append(
+            (symbol, upper-lower, lower, upper))
     code_value = code.coder(text)
     coder_intervals = code.coder_intervals(text)
     decoder_steps = code.decoder_steps(code_value, len(text))
     return {
         "sample": sample,
         "text": text,
-        "intervals": intervals,
+        "probability_and_intervals": probability_and_intervals,
         "code_value": code_value,
         "coder_intervals": coder_intervals,
         "decoder_steps": decoder_steps,

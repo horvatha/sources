@@ -114,7 +114,7 @@
      </table>
    </div>
 
-   <p><a class="btn btn-primary btn-lg" role="button" href="{% url "simple_chain" id code_number 0 %}">A kommunikációs rendszer vizsgálata &raquo;</a></p>
+   <p><a class="btn btn-primary btn-lg" role="button" href="{% url "simple_chain" source_number=id code_number=code_number channel_description=0 hamming_block_length=0 %}">A kommunikációs rendszer vizsgálata &raquo;</a></p>
 
 {% else %}
   <div class="page-header">

@@ -4,14 +4,7 @@
 {% endblock buttons %}
 
 {% block content %}
-<div class="col-md-6">
-    <table class="table">
-    <tr><th>Jel</th><th>alsó határ</th><th>felső határ</th><tr>
-    {% for symbol, limits in intervals.items %}
-    <tr><td>{{symbol}}</td>{% for limit in limits %}<td>{{limit|floatformat:"3"}}</td>{% endfor %}<tr>
-    {% endfor %}
-    </table>
-</div>
+{% include "arithmetic/probabilities_and_intervals_table.html" %}
 
 <div class="col-md-6">
     <table class="table">
