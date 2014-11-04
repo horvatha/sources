@@ -1,0 +1,8 @@
+<div class="col-md-6">
+    <table class="table">
+    <tr><th>Jel</th><th>valószínűség</th><th>alsó határ</th><th>felső határ</th><tr>
+    {% for symbol, prob, lower, upper in probability_and_intervals %}
+    <tr><td>{{symbol}}</td><td>{{prob|floatformat:"3"}}</td><td>{{lower|floatformat:"3"}}</td><td>{{upper|floatformat:"3"}}</td><tr>
+    {% endfor %}
+    </table>
+</div>
