@@ -24,11 +24,11 @@ urlpatterns = patterns(
         'sources.views.general_chain',
         name='general_chain'),
 
-    url(r'^change_source/([^/]+)/([^/]+)([^/]+)//(\d+)/$',
+    url(r'^change_source/([^/]+)/([^/]+)/([^/]+)/(\d+)/$',
         'sources.views.change_communication_system',
         {"element_to_change": "source_description"},
         name='change_source'),
-    url(r'^change_code/([^/]+)/([^/]+)([^/]+)//(\d+)/$',
+    url(r'^change_code/([^/]+)/([^/]+)/([^/]+)/(\d+)/$',
         'sources.views.change_communication_system',
         {"element_to_change": "code_description"},
         name='change_code'),
