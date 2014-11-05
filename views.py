@@ -166,7 +166,8 @@ def change_communication_system(
         channel_description=channel_description,
         hamming_block_length=hamming_block_length,
     )
-    kwargs[element_to_change] = request.POST[element_to_change]
+    kwargs[element_to_change] = request.POST[element_to_change].replace('/',
+                                                                        'r')
 
     return redirect(
         general_chain,
